@@ -42,18 +42,9 @@ services:
       # - OIDC_ROLES_ATTRIBUTE=groups
       # - OIDC_IGNORE_USERNAME=true
       # - OIDC_IGNORE_ROLES=true
-      # - OIDC_ENFORCED=true
 
-      # Email Notifications (https://nodemailer.com/smtp/)
-      # - SMTP_HOST=
-      # - SMTP_PORT=587
-      # - SMTP_SECURE=true
-      # - SMTP_USER=
-      # - SMTP_PASSWORD=
-      # - SMTP_FROM="Demo Demo" <demo@demo.demo>
-
-      # - SLACK_BOT_TOKEN=
-      # - SLACK_CHANNEL_ID=
+      # - SLACK_BOT_TOKEN=xoxb-xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxx
+      # - SLACK_CHANNEL_ID=xxxxxxxxxx
     depends_on:
       postgres:
         condition: service_healthy
