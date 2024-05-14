@@ -58,7 +58,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources: embeddedLocales,
-    fallbackLng: 'en',
+    fallbackLng: 'pt',
     supportedLngs: languages,
     load: 'languageOnly',
     interpolation: {

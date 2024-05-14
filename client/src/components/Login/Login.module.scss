@@ -3,6 +3,12 @@
     background: url("../../assets/images/cover.jpg") center / cover;
   }
 
+  img {
+    width: 300px;
+    height: auto;
+    margin-bottom: -10px;
+  }
+
   .descriptionSubtitle {
     font-size: 24px;
     font-weight: normal;
@@ -57,11 +63,11 @@
 
   .loginWrapper {
     margin: 0 auto;
-    max-width: 440px;
+    max-width: 652px;
     padding: 0 20px;
   }
 
   .wrapper {
-    background: #fff;
+    background: #424a45;
   }
 }

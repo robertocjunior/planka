@@ -137,6 +137,10 @@ const Login = React.memo(
       passwordField.current.focus();
     }, [focusPasswordFieldState]);
 
+    useEffect(() => {
+      document.title = "Gerenciamento de Cargas"; // Altera o título da página quando o componente é montado
+    }, []);
+
     return (
       <div className={classNames(styles.wrapper, styles.fullHeight)}>
         <Grid verticalAlign="middle" className={styles.fullHeightPaddingFix}>
@@ -144,12 +148,9 @@ const Login = React.memo(
             <Grid verticalAlign="middle" className={styles.fullHeightPaddingFix}>
               <Grid.Column>
                 <div className={styles.loginWrapper}>
-                  <Header
-                    as="h1"
-                    textAlign="center"
-                    content={t('common.logInToPlanka')}
-                    className={styles.formTitle}
-                  />
+                  <Header as="h1" textAlign="center" className={styles.formTitle}>
+                    <img src={require('../../assets/images/logo-nico.png')} alt="Grupo Nico" draggable="false" />
+                  </Header>
                   <div>
                     {message && (
                       <Message
@@ -228,7 +229,7 @@ const Login = React.memo(
           >
             <div className={styles.descriptionWrapperOverlay} />
             <div className={styles.descriptionWrapper}>
-              <Header inverted as="h1" content="Planka" className={styles.descriptionTitle} />
+              <Header inverted as="h1" content="Logística cerealista" className={styles.descriptionTitle} />
               <Header
                 inverted
                 as="h2"

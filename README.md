@@ -1,3 +1,5 @@
+docker-compose -d
+
 # Planka
 #### Elegant open source project tracking.
 
