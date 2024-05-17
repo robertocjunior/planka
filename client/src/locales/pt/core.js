@@ -201,6 +201,8 @@ export default {
       deleteTask: 'Excluir tarefa',
       deleteTask_title: 'Excluir Tarefa',
       deleteUser: 'Excluir usuário',
+      duplicate: 'Duplicar',
+      duplicateCard_title: 'Duplicar Cartão',
       edit: 'Editar',
       editDueDate_title: 'Editar Data de Vencimento',
       editDescription_title: 'Editar Descrição',
