@@ -138,6 +138,7 @@ export default {
       searchLabels: 'Pesquisar rótulos...',
       searchMembers: 'Pesquisar membros...',
       searchUsers: 'Pesquisar usuários...',
+      searchCards: 'Pesquisar cartões',
       seconds: 'Segundos',
       selectBoard: 'Selecionar quadro',
       selectList: 'Selecionar lista',
