@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  planka:
+    build:
+      context: https://github.com/robertocjunior/planka.git
+    restart: on-failure
+    volumes:
+      - user-avatars:/app/public/user-avatars
+      - project-background-images:/app/public/project-background-images
+      - attachments:/app/private/attachments
+    ports:
+      - 8080:1337
+    environment:
+      # Base URL do Planka
+      - BASE_URL=http://192.168.15.5:8080
+      # URL do banco de dados PostgreSQL
+      - DATABASE_URL=postgresql://postgres@postgres/planka
+      # Chave secreta para o Planka
+      - SECRET_KEY=notsecretkey
+      # Variáveis de ambiente existentes
+      - DEFAULT_ADMIN_EMAIL=demo@demo.demo
+      - DEFAULT_ADMIN_PASSWORD=teste@2024*
+      - DEFAULT_ADMIN_NAME=Suporte
+      - DEFAULT_ADMIN_USERNAME=Sup
+      - SMTP_HOST=smtp.teste.com.br
+      - SMTP_PORT=587
+      - SMTP_SECURE=false
+      - SMTP_USER=planka@teste.com.br
+      - SMTP_PASSWORD=teste@123
+      - SMTP_FROM="Planka Notification" <planka@teste.com.br>
+
+volumes:
+  user-avatars:
+  project-background-images:
+  attachments:
+  db-data:
