@@ -23,7 +23,8 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
   const open = useCallback(() => {
     setIsOpened(true);
     const initialValue = defaultValue || '';
-    setValue(initialValue);
+    const preaddedFields = Object.values(DEFAULT_FIELDS).join('');
+    setValue(`${preaddedFields}\n${initialValue}`);
   }, [defaultValue, setValue]);
 
   const close = useCallback(() => {
@@ -93,13 +94,6 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     [],
   );
 
-  const addDefaultFields = useCallback(() => {
-    const preaddedFields = Object.values(DEFAULT_FIELDS).join('');
-    if (!value.includes(preaddedFields)) {
-      setValue(`${preaddedFields}\n${value}`);
-    }
-  }, [value, setValue]);
-
   if (!isOpened) {
     return React.cloneElement(children, {
       onClick: handleChildrenClick,
@@ -115,7 +109,6 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
         className={styles.field}
         onKeyDown={handleFieldKeyDown}
         onChange={setValue}
-        onFocus={addDefaultFields} // Adiciona os campos predefinidos quando o editor recebe o foco
       />
       <div className={styles.controls}>
         <Button positive content={t('action.save')} />
