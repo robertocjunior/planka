@@ -1,36 +1,40 @@
-import React, { useCallback, useImperativeHandle, useState } from 'react';
+import React, { useCallback, useImperativeHandle, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { Button, Form, Input } from 'semantic-ui-react';
+import { Button, Form } from 'semantic-ui-react';
+import SimpleMDE from 'react-simplemde-editor';
 
 import styles from './DescriptionEdit.module.scss';
 
 const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, ref) => {
   const [t] = useTranslation();
   const [isOpened, setIsOpened] = useState(false);
-  const [values, setValues] = useState(Array(6).fill(''));
+  const [value, setValue] = useState(null);
 
   const open = useCallback(() => {
     setIsOpened(true);
-    setValues(defaultValue ? defaultValue.split('\n').slice(0, 6) : Array(6).fill(''));
-  }, [defaultValue]);
+    setValue(defaultValue || '');
+  }, [defaultValue, setValue]);
 
   const close = useCallback(() => {
-    const cleanValues = values.map(value => value.trim());
-    const cleanValue = cleanValues.join('\n');
+    const cleanValue = value.trim() || null;
 
-    if (cleanValue !== (defaultValue || '')) {
+    if (cleanValue !== defaultValue) {
       onUpdate(cleanValue);
     }
 
     setIsOpened(false);
-    setValues(Array(6).fill(''));
-  }, [defaultValue, onUpdate, values]);
+    setValue(null);
+  }, [defaultValue, onUpdate, value, setValue]);
 
-  useImperativeHandle(ref, () => ({
-    open,
-    close,
-  }), [open, close]);
+  useImperativeHandle(
+    ref,
+    () => ({
+      open,
+      close,
+    }),
+    [open, close],
+  );
 
   const handleChildrenClick = useCallback(() => {
     if (!getSelection().toString()) {
@@ -38,19 +42,46 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     }
   }, [open]);
 
-  const handleFieldKeyDown = useCallback((event) => {
-    if (event.ctrlKey && event.key === 'Enter') {
-      close();
-    }
-  }, [close]);
+  const handleFieldKeyDown = useCallback(
+    (event) => {
+      if (event.ctrlKey && event.key === 'Enter') {
+        close();
+      }
+    },
+    [close],
+  );
 
   const handleSubmit = useCallback(() => {
     close();
   }, [close]);
 
-  const handleChange = useCallback((index, newValue) => {
-    setValues(values => values.map((value, i) => i === index ? newValue : value));
-  }, []);
+  const mdEditorOptions = useMemo(
+    () => ({
+      autofocus: true,
+      spellChecker: false,
+      status: false,
+      toolbar: [
+        'bold',
+        'italic',
+        'heading',
+        'strikethrough',
+        '|',
+        'quote',
+        'unordered-list',
+        'ordered-list',
+        'table',
+        '|',
+        'link',
+        'image',
+        '|',
+        'undo',
+        'redo',
+        '|',
+        'guide',
+      ],
+    }),
+    [],
+  );
 
   if (!isOpened) {
     return React.cloneElement(children, {
@@ -60,17 +91,14 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
 
   return (
     <Form onSubmit={handleSubmit}>
-      {values.map((value, index) => (
-        <Input
-          key={index}
-          value={value}
-          placeholder={t(`common.enterDescriptionPart${index + 1}`)}
-          className={styles.field}
-          onKeyDown={handleFieldKeyDown}
-          onChange={(e) => handleChange(index, e.target.value)}
-          fluid
-        />
-      ))}
+      <SimpleMDE
+        value={value}
+        options={mdEditorOptions}
+        placeholder={t('common.enterDescription')}
+        className={styles.field}
+        onKeyDown={handleFieldKeyDown}
+        onChange={setValue}
+      />
       <div className={styles.controls}>
         <Button positive content={t('action.save')} />
       </div>
