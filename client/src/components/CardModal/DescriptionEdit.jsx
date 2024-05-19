@@ -94,7 +94,7 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
   const renderFormattedFields = useMemo(() => {
     return Object.entries(DEFAULT_FIELDS).map(([key, label]) => (
       <div key={key} className={styles.formattedField}>
-        {label}: {fields[key] || ''}
+        {label}: {fields[key]}
       </div>
     ));
   }, [fields]);
