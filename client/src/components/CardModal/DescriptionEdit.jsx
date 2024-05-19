@@ -12,7 +12,12 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
 
   const open = useCallback(() => {
     setIsOpened(true);
-    setValues(defaultValue ? defaultValue.split('\n').slice(0, 6) : Array(6).fill(''));
+    if (defaultValue) {
+      const initialValues = defaultValue.split('\n').slice(0, 6);
+      setValues([...initialValues, ...Array(6 - initialValues.length).fill('')]);
+    } else {
+      setValues(Array(6).fill(''));
+    }
   }, [defaultValue]);
 
   const close = useCallback(() => {
@@ -61,15 +66,16 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
   return (
     <Form onSubmit={handleSubmit}>
       {values.map((value, index) => (
-        <Input
-          key={index}
-          value={value}
-          placeholder={t(`common.enterDescriptionPart${index + 1}`)}
-          className={styles.field}
-          onKeyDown={handleFieldKeyDown}
-          onChange={(e) => handleChange(index, e.target.value)}
-          fluid
-        />
+        <Form.Field key={index}>
+          <Input
+            value={value}
+            placeholder={t(`common.enterDescriptionPart${index + 1}`)}
+            className={styles.field}
+            onKeyDown={handleFieldKeyDown}
+            onChange={(e) => handleChange(index, e.target.value)}
+            fluid
+          />
+        </Form.Field>
       ))}
       <div className={styles.controls}>
         <Button positive content={t('action.save')} />
