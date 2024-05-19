@@ -1,4 +1,4 @@
-import React, { useCallback, useImperativeHandle, useState } from 'react';
+import React, { useCallback, useImperativeHandle, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Button, Form, Input } from 'semantic-ui-react';
@@ -17,25 +17,23 @@ const DEFAULT_FIELDS = {
 const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, ref) => {
   const [t] = useTranslation();
   const [isOpened, setIsOpened] = useState(false);
-  const [fields, setFields] = useState(DEFAULT_FIELDS);
-  const [values, setValues] = useState({});
+  const [description, setDescription] = useState('');
 
   const open = useCallback(() => {
     setIsOpened(true);
-    setValues({});
-  }, []);
+    setDescription(defaultValue || '');
+  }, [defaultValue, setDescription]);
 
   const close = useCallback(() => {
-    const cleanValue = Object.values(values).join(' ').trim() || null;
+    const cleanValue = description.trim() || null;
 
     if (cleanValue !== defaultValue) {
       onUpdate(cleanValue);
     }
 
     setIsOpened(false);
-    setFields(DEFAULT_FIELDS);
-    setValues({});
-  }, [defaultValue, onUpdate, values]);
+    setDescription('');
+  }, [defaultValue, onUpdate, description]);
 
   useImperativeHandle(
     ref,
@@ -52,27 +50,15 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     }
   }, [open]);
 
-  const handleFieldChange = useCallback((e, { name, value }) => {
-    setValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
-  }, []);
-
   const handleSubmit = useCallback(() => {
     close();
   }, [close]);
 
-  const renderInputFields = Object.entries(fields).map(([key, value]) => (
-    <Form.Field
-      key={key}
-      control={Input}
-      name={key}
-      label={value}
-      value={values[key] || ''}
-      onChange={handleFieldChange}
-    />
-  ));
+  const renderInputFields = useMemo(() => {
+    return Object.entries(DEFAULT_FIELDS).map(([key, value]) => (
+      <Form.Field key={key} control={Input} name={key} label={value} disabled />
+    ));
+  }, []);
 
   if (!isOpened) {
     return React.cloneElement(children, {
