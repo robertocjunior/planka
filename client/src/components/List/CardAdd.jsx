@@ -65,11 +65,27 @@ const CardAdd = React.memo(({ isOpened, onCreate, onClose }) => {
           const { current } = nameField;
           if (current && current.ref && current.ref.current) {
             const currentPosition = current.ref.current.selectionStart;
-            const nextPosition = data.name.indexOf('[Corr/Forn.:]', currentPosition);
 
-            if (nextPosition !== -1) {
-              const newPosition = nextPosition + '[Corr/Forn.:'.length;
-              current.ref.current.setSelectionRange(newPosition, newPosition);
+            // Definição dos campos e suas posições
+            const fields = [
+              { name: 'Corr/Forn.:', length: '[Corr/Forn.:'.length },
+              { name: 'Qtd.:', length: '[Qtd.:'.length },
+              { name: 'Local/Carreg.:', length: '[Local/Carreg.:'.length },
+              { name: 'NF.:', length: '[NF.:'.length },
+            ];
+
+            let nextFieldPosition = -1;
+            for (let i = 0; i < fields.length; i++) {
+              const field = fields[i];
+              const nextPosition = data.name.indexOf(field.name, currentPosition);
+              if (nextPosition !== -1 && nextPosition >= currentPosition) {
+                nextFieldPosition = nextPosition + field.length;
+                break;
+              }
+            }
+
+            if (nextFieldPosition !== -1) {
+              current.ref.current.setSelectionRange(nextFieldPosition, nextFieldPosition);
             }
           }
 
