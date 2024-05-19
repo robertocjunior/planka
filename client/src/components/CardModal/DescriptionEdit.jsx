@@ -1,4 +1,4 @@
-import React, { useCallback, useImperativeHandle, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useImperativeHandle, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Button, Form } from 'semantic-ui-react';
@@ -19,7 +19,6 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
   const [t] = useTranslation();
   const [isOpened, setIsOpened] = useState(false);
   const [value, setValue] = useState(null);
-  const editorRef = useRef(null);
 
   const open = useCallback(() => {
     setIsOpened(true);
@@ -67,38 +66,33 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     close();
   }, [close]);
 
-  useEffect(() => {
-    if (editorRef.current) {
-      // Definir a posição do cursor após o componente ser montado
-      editorRef.current.codemirror.focus();
-      editorRef.current.codemirror.setCursor({ line: 0, ch: 18 }); // Linha 0, caractere 18
-    }
-  }, []);
-
-  const mdEditorOptions = {
-    autofocus: true,
-    spellChecker: false,
-    status: false,
-    toolbar: [
-      'bold',
-      'italic',
-      'heading',
-      'strikethrough',
-      '|',
-      'quote',
-      'unordered-list',
-      'ordered-list',
-      'table',
-      '|',
-      'link',
-      'image',
-      '|',
-      'undo',
-      'redo',
-      '|',
-      'guide',
-    ],
-  };
+  const mdEditorOptions = useMemo(
+    () => ({
+      autofocus: true,
+      spellChecker: false,
+      status: false,
+      toolbar: [
+        'bold',
+        'italic',
+        'heading',
+        'strikethrough',
+        '|',
+        'quote',
+        'unordered-list',
+        'ordered-list',
+        'table',
+        '|',
+        'link',
+        'image',
+        '|',
+        'undo',
+        'redo',
+        '|',
+        'guide',
+      ],
+    }),
+    [],
+  );
 
   if (!isOpened) {
     return React.cloneElement(children, {
@@ -109,7 +103,6 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
   return (
     <Form onSubmit={handleSubmit}>
       <SimpleMDE
-        ref={editorRef}
         value={value}
         options={mdEditorOptions}
         placeholder={t('common.enterDescription')}
