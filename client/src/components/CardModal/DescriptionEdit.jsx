@@ -19,7 +19,6 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
   const [t] = useTranslation();
   const [isOpened, setIsOpened] = useState(false);
   const [value, setValue] = useState(null);
-  const [isInitialCursorSet, setIsInitialCursorSet] = useState(false);
   const editorRef = useRef(null);
 
   const open = useCallback(() => {
@@ -68,14 +67,13 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     close();
   }, [close]);
 
-  const handleEditorFocus = useCallback(() => {
-    if (!isInitialCursorSet && editorRef.current) {
-      // Definir a posição do cursor após o componente ser montado e o editor receber o foco
+  useEffect(() => {
+    if (editorRef.current) {
+      // Definir a posição do cursor após o componente ser montado
       editorRef.current.codemirror.focus();
       editorRef.current.codemirror.setCursor({ line: 0, ch: 18 }); // Linha 0, caractere 18
-      setIsInitialCursorSet(true);
     }
-  }, [isInitialCursorSet]);
+  }, []);
 
   const mdEditorOptions = {
     autofocus: true,
@@ -118,7 +116,6 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
         className={styles.field}
         onKeyDown={handleFieldKeyDown}
         onChange={setValue}
-        onFocus={handleEditorFocus}
       />
       <div className={styles.controls}>
         <Button positive content={t('action.save')} />
