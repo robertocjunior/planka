@@ -17,12 +17,14 @@ const DEFAULT_FIELDS = {
 const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, ref) => {
   const [t] = useTranslation();
   const [isOpened, setIsOpened] = useState(false);
+  const [values, setValues] = useState({});
   const [description, setDescription] = useState('');
 
   const open = useCallback(() => {
     setIsOpened(true);
+    setValues(DEFAULT_FIELDS);
     setDescription(defaultValue || '');
-  }, [defaultValue, setDescription]);
+  }, [defaultValue, setValues, setDescription]);
 
   const close = useCallback(() => {
     const cleanValue = description.trim() || null;
@@ -32,6 +34,7 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     }
 
     setIsOpened(false);
+    setValues({});
     setDescription('');
   }, [defaultValue, onUpdate, description]);
 
@@ -50,15 +53,27 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     }
   }, [open]);
 
+  const handleFieldChange = useCallback(
+    (e, { name, value }) => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [name]: value,
+      }));
+    },
+    [setValues]
+  );
+
   const handleSubmit = useCallback(() => {
+    const preaddedFields = Object.values(values).map(field => `{${field}:}`).join(' ');
+    setDescription(`${preaddedFields}\n${description}`);
     close();
-  }, [close]);
+  }, [values, description, setDescription, close]);
 
   const renderInputFields = useMemo(() => {
-    return Object.entries(DEFAULT_FIELDS).map(([key, value]) => (
-      <Form.Field key={key} control={Input} name={key} label={value} disabled />
+    return Object.entries(values).map(([key, value]) => (
+      <Form.Field key={key} control={Input} name={key} label={value} value={values[key]} onChange={handleFieldChange} />
     ));
-  }, []);
+  }, [values, handleFieldChange]);
 
   if (!isOpened) {
     return React.cloneElement(children, {
