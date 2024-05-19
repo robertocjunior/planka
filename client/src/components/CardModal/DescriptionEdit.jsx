@@ -2,6 +2,7 @@ import React, { useCallback, useImperativeHandle, useState, useMemo, useEffect }
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Button, Form, Input } from 'semantic-ui-react';
+import styles from './DescriptionEdit.module.scss';
 
 const DEFAULT_FIELDS = {
   VLR_TOTAL_DO_FRETE: 'VLR TOTAL DO FRETE',
@@ -86,7 +87,7 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
 
   const renderFormattedFields = useMemo(() => {
     return Object.entries(DEFAULT_FIELDS).map(([key, label]) => (
-      <div key={key} style={{ marginBottom: '10px' }}>
+      <div key={key} className={styles.formattedField}>
         {label}: {fields[key] || ''}
       </div>
     ));
