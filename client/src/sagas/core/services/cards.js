@@ -127,10 +127,8 @@ export function* duplicateCard(id) {
   const index = yield select(selectors.selectCardIndexById, id);
 
   const nextData = {
-    position: yield select(selectors.selectNextCardPosition, listId, index + 1),
-    name: `${name} (${i18n.t('common.copy', {
-      context: 'inline',
-    })})`,
+    position: yield select(selectors.selectCardPositionById, id), // Use a posição do cartão original
+    name, // Manter o mesmo nome do cartão original
   };
 
   const localId = yield call(createLocalId);
