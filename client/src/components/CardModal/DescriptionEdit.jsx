@@ -1,4 +1,4 @@
-import React, { useCallback, useImperativeHandle, useMemo, useState } from 'react';
+import React, { useCallback, useImperativeHandle, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Button, Form, Input } from 'semantic-ui-react';
@@ -33,6 +33,7 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     }
 
     setIsOpened(false);
+    setFields(DEFAULT_FIELDS);
   }, [defaultValue, onUpdate, values]);
 
   useImperativeHandle(
@@ -61,18 +62,16 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     close();
   }, [close]);
 
-  const renderInputFields = useMemo(() => {
-    return Object.entries(fields).map(([key, value]) => (
-      <Form.Field
-        key={key}
-        control={Input}
-        name={key}
-        label={value}
-        value={values[key] || ''}
-        onChange={handleFieldChange}
-      />
-    ));
-  }, [fields, values, handleFieldChange]);
+  const renderInputFields = Object.entries(fields).map(([key, value]) => (
+    <Form.Field
+      key={key}
+      control={Input}
+      name={key}
+      label={value}
+      value={values[key] || ''}
+      onChange={handleFieldChange}
+    />
+  ));
 
   if (!isOpened) {
     return React.cloneElement(children, {
