@@ -69,7 +69,7 @@ const CardAdd = React.memo(({ isOpened, onCreate, onClose }) => {
             // Definição dos campos e suas posições
             const fields = [
               { name: 'Corr/Forn.', length: '[Corr/Forn.'.length }, // Ajuste para incluir o ':' na contagem
-              { name: 'Qtd.', length: '[Qtd.::'.length }, // Ajuste para incluir o ':' na contagem
+              { name: 'Qtd.', length: '[Qtd.'.length }, // Ajuste para incluir o ':' na contagem
               { name: 'Local/Carreg.', length: '[Local/Carreg.'.length }, // Ajuste para incluir o ':' na contagem
               { name: 'NF.', length: '[NF.'.length }, // Ajuste para incluir o ':' na contagem
               { name: 'Prod.', length: '[Prod.'.length }, // Ajuste para incluir o ':' na contagem
