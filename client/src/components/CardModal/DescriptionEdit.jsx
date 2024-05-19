@@ -14,20 +14,10 @@ const DEFAULT_FIELDS = {
   PESO_DE_CHEGADA: 'PESO DE CHEGADA',
 };
 
-const CommentInput = ({ value, onChange }) => (
-  <Form.TextArea
-    label="Comentários"
-    placeholder="Digite seus comentários..."
-    value={value}
-    onChange={onChange}
-  />
-);
-
 const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, ref) => {
   const [t] = useTranslation();
   const [isOpened, setIsOpened] = useState(false);
   const [values, setValues] = useState({});
-  const [comment, setComment] = useState('');
 
   const open = useCallback(() => {
     setIsOpened(true);
@@ -60,10 +50,6 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     }));
   }, []);
 
-  const handleCommentChange = useCallback((e, { value }) => {
-    setComment(value);
-  }, []);
-
   const handleSubmit = useCallback(() => {
     onUpdate(values);
     close();
@@ -89,11 +75,13 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      {renderInputFields}
-      <CommentInput value={comment} onChange={handleCommentChange} />
-      <Form.Field control={Button} positive content={t('action.save')} />
-    </Form>
+    <>
+      <Form onSubmit={handleSubmit}>
+        {renderInputFields}
+        <Form.Field control={Button} positive content={t('action.save')} />
+      </Form>
+      {children}
+    </>
   );
 });
 
