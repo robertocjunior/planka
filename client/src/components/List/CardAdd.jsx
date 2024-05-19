@@ -68,24 +68,29 @@ const CardAdd = React.memo(({ isOpened, onCreate, onClose }) => {
 
             // Definição dos campos e suas posições
             const fields = [
-              { name: 'Corr/Forn.', length: '[Corr/Forn.'.length },
-              { name: 'Qtd.', length: '[Qtd.'.length },
-              { name: 'Local/Carreg.', length: '[Local/Carreg.'.length },
-              { name: 'NF.', length: '[NF.'.length },
+              { name: 'Corr/Forn.', length: '[Corr/Forn.'.length }, // Ajuste para incluir o ':' na contagem
+              { name: 'Qtd.', length: '[Qtd.'.length }, // Ajuste para incluir o ':' na contagem
+              { name: 'Local/Carreg.', length: '[Local/Carreg.'.length }, // Ajuste para incluir o ':' na contagem
+              { name: 'NF.', length: '[NF.'.length }, // Ajuste para incluir o ':' na contagem
+              { name: 'Prod.', length: '[Prod.'.length }, // Ajuste para incluir o ':' na contagem
             ];
 
             let nextFieldPosition = -1;
+            let nextIndex = -1;
             for (let i = 0; i < fields.length; i++) {
               const field = fields[i];
               const nextPosition = data.name.indexOf(field.name, currentPosition);
               if (nextPosition !== -1 && nextPosition >= currentPosition) {
-                nextFieldPosition = nextPosition + field.length;
-                break;
+                if (nextFieldPosition === -1 || nextPosition < nextFieldPosition) {
+                  nextFieldPosition = nextPosition + field.length;
+                  nextIndex = i;
+                }
               }
             }
 
-            if (nextFieldPosition !== -1) {
-              current.ref.current.setSelectionRange(nextFieldPosition, nextFieldPosition);
+            // Se não houver próxima posição, volte para o início
+            if (nextFieldPosition === -1 && nextIndex === -1) {
+              current.ref.current.setSelectionRange(0, 0);
             }
           }
 
