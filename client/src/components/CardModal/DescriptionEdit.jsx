@@ -126,3 +126,4 @@ DescriptionEdit.defaultProps = {
 };
 
 export default React.memo(DescriptionEdit);
+  
