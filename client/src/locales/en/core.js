@@ -170,6 +170,16 @@ export default {
       writeComment: 'Write a comment...',
     },
 
+    fields: {
+      "VLR_TOTAL_DO_FRETE": "Total Freight Cost",
+      "VLR_DO_FRETE_TON": "Freight Cost per Ton",
+      "TOTAL_COMPRADO": "Total Purchased",
+      "TOTAL_RECEBIDO": "Total Received",
+      "PESO_DE_ORIGEM": "Origin Weight",
+      "PESO_DE_CHEGADA": "Arrival Weight",
+      "DESCRICAO": "Description"
+    },
+
     action: {
       addAnotherCard: 'Add another card',
       addAnotherList: 'Add another list',

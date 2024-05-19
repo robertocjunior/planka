@@ -168,6 +168,16 @@ export default {
       writeComment: 'Escreva um comentário...',
     },
 
+    fields: {
+      "VLR_TOTAL_DO_FRETE": "VLR TOTAL DO FRETE",
+      "VLR_DO_FRETE_TON": "VLR DO FRETE TON.",
+      "TOTAL_COMPRADO": "TOTAL COMPRADO",
+      "TOTAL_RECEBIDO": "TOTAL RECEBIDO",
+      "PESO_DE_ORIGEM": "PESO DE ORIGEM",
+      "PESO_DE_CHEGADA": "PESO DE CHEGADA",
+      "DESCRICAO": "DESCRIÇÃO"
+    },
+
     action: {
       addAnotherCard: 'Adicionar outro cartão',
       addAnotherList: 'Adicionar outra lista',

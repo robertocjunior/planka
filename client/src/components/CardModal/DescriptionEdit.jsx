@@ -4,22 +4,22 @@ import { useTranslation } from 'react-i18next';
 import { Button, Form, Input } from 'semantic-ui-react';
 import styles from './DescriptionEdit.module.scss';
 
-const DEFAULT_FIELDS = {
-  VLR_TOTAL_DO_FRETE: 'VLR TOTAL DO FRETE',
-  VLR_DO_FRETE_TON: 'VLR DO FRETE TON.',
-  TOTAL_COMPRADO: 'TOTAL COMPRADO',
-  TOTAL_RECEBIDO: 'TOTAL RECEBIDO',
-  PESO_DE_ORIGEM: 'PESO DE ORIGEM',
-  PESO_DE_CHEGADA: 'PESO DE CHEGADA',
-  DESCRICAO: 'DESCRIÇÃO',  // Novo campo adicionado
-};
+const DEFAULT_FIELDS = [
+  'VLR_TOTAL_DO_FRETE',
+  'VLR_DO_FRETE_TON',
+  'TOTAL_COMPRADO',
+  'TOTAL_RECEBIDO',
+  'PESO_DE_ORIGEM',
+  'PESO_DE_CHEGADA',
+  'DESCRICAO', // Novo campo adicionado
+];
 
 const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, ref) => {
-  const [t] = useTranslation();
+  const { t } = useTranslation();
   const [isOpened, setIsOpened] = useState(false);
   const [fields, setFields] = useState(() => {
     const initialFields = {};
-    Object.keys(DEFAULT_FIELDS).forEach(key => {
+    DEFAULT_FIELDS.forEach(key => {
       initialFields[key] = '';
     });
     return initialFields;
@@ -29,7 +29,7 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     if (defaultValue) {
       const values = defaultValue.split('\n');
       const newFields = {};
-      Object.keys(DEFAULT_FIELDS).forEach((key, index) => {
+      DEFAULT_FIELDS.forEach((key, index) => {
         newFields[key] = values[index] || '';
       });
       setFields(newFields);
@@ -74,25 +74,26 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
   }, [close]);
 
   const renderInputFields = useMemo(() => {
-    return Object.entries(DEFAULT_FIELDS).map(([key, label]) => (
+    return DEFAULT_FIELDS.map(key => (
       <Form.Field
         key={key}
         control={Input}
         name={key}
-        label={label}
+        label={t(`fields.${key}`)}
         value={fields[key]}
         onChange={handleFieldChange}
       />
     ));
-  }, [fields, handleFieldChange]);
+  }, [fields, handleFieldChange, t]);
 
   const renderFormattedFields = useMemo(() => {
-    return Object.entries(DEFAULT_FIELDS).map(([key, label]) => (
+    return DEFAULT_FIELDS.map(key => (
       <div key={key} className={styles.formattedField}>
-        {label}: {fields[key] || ''}
+        {t(`fields.${key}`)}: {fields[key] || ''}
+        <br />
       </div>
     ));
-  }, [fields]);
+  }, [fields, t]);
 
   if (!isOpened) {
     return (
