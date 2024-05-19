@@ -73,12 +73,24 @@ const CardAdd = React.memo(({ isOpened, onCreate, onClose }) => {
 
   useEffect(() => {
     if (isOpened) {
-      nameField.current.ref.current.focus();
+      const { current } = nameField;
+      if (current && current.ref && current.ref.current) {
+        current.ref.current.focus();
+        // Posicionar o cursor entre o ":" e o "]" no campo "[Prod.:]"
+        const position = '[Prod.:'.length;
+        current.ref.current.setSelectionRange(position, position);
+      }
     }
   }, [isOpened]);
 
   useDidUpdate(() => {
-    nameField.current.ref.current.focus();
+    const { current } = nameField;
+    if (current && current.ref && current.ref.current) {
+      current.ref.current.focus();
+      // Posicionar o cursor entre o ":" e o "]" no campo "[Prod.:]"
+      const position = '[Prod.:'.length;
+      current.ref.current.setSelectionRange(position, position);
+    }
   }, [focusNameFieldState]);
 
   return (
