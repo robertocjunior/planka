@@ -161,6 +161,9 @@ export function* duplicateCard(id) {
   }
 
   yield put(actions.duplicateCard.success(localId, card, cardMemberships, cardLabels, tasks));
+
+  // Atualizar o estado do Redux com o cartão duplicado
+  yield put(actions.createCard({ ...nextData, id: card.id, listId: nextData.listId, boardId: nextData.boardId }));
 }
 
 export function* duplicateCurrentCard() {
