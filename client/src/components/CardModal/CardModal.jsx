@@ -373,44 +373,6 @@ const CardModal = React.memo(
                 </div>
               </div>
             )}
-            {(personalizedName || canEdit) && (
-              <div className={styles.contentModule}>
-                <div className={styles.moduleWrapper}>
-                  <Icon name="user outline" className={styles.moduleIcon} />
-                  <div className={styles.moduleHeader}>{t('common.personalized')}</div>
-                  {canEdit ? (
-                    <PersonalizedEdit
-                      defaultValueName={personalizedName}
-                      defaultValueEmail={personalizedEmail}
-                      onUpdate={handlePersonalizedUpdate}
-                    >
-                      {personalizedName || personalizedEmail ? (
-                        <button
-                          type="button"
-                          className={classNames(styles.personalizedText, styles.cursorPointer)}
-                        >
-                          <Markdown linkStopPropagation linkTarget="_blank">
-                            {personalizedName} - {personalizedEmail}
-                          </Markdown>
-                        </button>
-                      ) : (
-                        <button type="button" className={styles.personalizedButton}>
-                          <span className={styles.personalizedButtonText}>
-                            {t('action.addPersonalizedDetails')}
-                          </span>
-                        </button>
-                      )}
-                    </PersonalizedEdit>
-                  ) : (
-                    <div className={styles.personalizedText}>
-                      <Markdown linkStopPropagation linkTarget="_blank">
-                        {personalizedName} - {personalizedEmail}
-                      </Markdown>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
             {(tasks.length > 0 || canEdit) && (
               <div className={styles.contentModule}>
                 <div className={styles.moduleWrapper}>
