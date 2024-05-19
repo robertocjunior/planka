@@ -75,10 +75,13 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      {renderInputFields}
-      <Form.Field control={Button} positive content={t('action.save')} />
-    </Form>
+    <>
+      <Form onSubmit={handleSubmit}>
+        {renderInputFields}
+        <Form.Field control={Button} positive content={t('action.save')} />
+      </Form>
+      {children}
+    </>
   );
 });
 
