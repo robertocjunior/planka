@@ -25,14 +25,8 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
   }, [defaultValue]);
 
   const close = useCallback(() => {
-    const cleanValue = Object.values(values).join(' ').trim() || null;
-
-    if (cleanValue !== defaultValue) {
-      onUpdate(cleanValue);
-    }
-
     setIsOpened(false);
-  }, [defaultValue, onUpdate, values]);
+  }, []);
 
   useImperativeHandle(
     ref,
@@ -57,8 +51,9 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
   }, []);
 
   const handleSubmit = useCallback(() => {
+    onUpdate(values);
     close();
-  }, [close]);
+  }, [onUpdate, values, close]);
 
   const renderInputFields = useMemo(() => {
     return Object.entries(DEFAULT_FIELDS).map(([key, value]) => (
