@@ -1,9 +1,7 @@
-import React, { useCallback, useImperativeHandle, useState, useMemo } from 'react';
+import React, { useCallback, useImperativeHandle, useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Button, Form, Input } from 'semantic-ui-react';
-
-import styles from './DescriptionEdit.module.scss';
 
 const DEFAULT_FIELDS = {
   VLR_TOTAL_DO_FRETE: 'VLR TOTAL DO FRETE',
@@ -25,17 +23,20 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     return initialFields;
   });
 
-  const open = useCallback(() => {
-    setIsOpened(true);
-    const newFields = { ...fields };
+  useEffect(() => {
     if (defaultValue) {
       const values = defaultValue.split('\n');
+      const newFields = {};
       Object.keys(DEFAULT_FIELDS).forEach((key, index) => {
         newFields[key] = values[index] || '';
       });
+      setFields(newFields);
     }
-    setFields(newFields);
-  }, [defaultValue, fields]);
+  }, [defaultValue]);
+
+  const open = useCallback(() => {
+    setIsOpened(true);
+  }, []);
 
   const close = useCallback(() => {
     const cleanValues = Object.values(fields).map(value => value.trim());
@@ -46,13 +47,6 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     }
 
     setIsOpened(false);
-    setFields(prevFields => {
-      const resetFields = { ...prevFields };
-      Object.keys(DEFAULT_FIELDS).forEach(key => {
-        resetFields[key] = '';
-      });
-      return resetFields;
-    });
   }, [defaultValue, onUpdate, fields]);
 
   useImperativeHandle(ref, () => ({
@@ -86,15 +80,24 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
         label={label}
         value={fields[key]}
         onChange={handleFieldChange}
-        className={styles.field}
       />
     ));
   }, [fields, handleFieldChange]);
 
+  const renderFormattedFields = useMemo(() => {
+    return Object.entries(DEFAULT_FIELDS).map(([key, label]) => (
+      <div key={key}>
+        {label}: {fields[key] || ''}
+      </div>
+    ));
+  }, [fields]);
+
   if (!isOpened) {
-    return React.cloneElement(children, {
-      onClick: handleChildrenClick,
-    });
+    return (
+      <div onClick={handleChildrenClick}>
+        {renderFormattedFields}
+      </div>
+    );
   }
 
   return (
