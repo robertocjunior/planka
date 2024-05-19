@@ -59,10 +59,26 @@ const CardAdd = React.memo(({ isOpened, onCreate, onClose }) => {
 
           break;
         }
+        case 'Tab': {
+          event.preventDefault();
+
+          const { current } = nameField;
+          if (current && current.ref && current.ref.current) {
+            const currentPosition = current.ref.current.selectionStart;
+            const nextPosition = data.name.indexOf('[Corr/Forn.:]', currentPosition);
+
+            if (nextPosition !== -1) {
+              const newPosition = nextPosition + '[Corr/Forn.:'.length;
+              current.ref.current.setSelectionRange(newPosition, newPosition);
+            }
+          }
+
+          break;
+        }
         default:
       }
     },
-    [onClose, submit],
+    [onClose, submit, data.name],
   );
 
   const [handleFieldBlur, handleControlMouseOver, handleControlMouseOut] = useClosableForm(onClose);
