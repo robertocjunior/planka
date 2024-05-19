@@ -17,13 +17,12 @@ const DEFAULT_FIELDS = {
 const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, ref) => {
   const [t] = useTranslation();
   const [isOpened, setIsOpened] = useState(false);
-  const [fields, setFields] = useState(DEFAULT_FIELDS);
   const [values, setValues] = useState({});
 
   const open = useCallback(() => {
     setIsOpened(true);
-    setValues({ ...values, ...defaultValue });
-  }, [defaultValue, values]);
+    setValues({ ...defaultValue });
+  }, [defaultValue]);
 
   const close = useCallback(() => {
     const cleanValue = Object.values(values).join(' ').trim() || null;
@@ -62,7 +61,7 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
   }, [close]);
 
   const renderInputFields = useMemo(() => {
-    return Object.entries(fields).map(([key, value]) => (
+    return Object.entries(DEFAULT_FIELDS).map(([key, value]) => (
       <Form.Field
         key={key}
         control={Input}
@@ -72,7 +71,7 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
         onChange={handleFieldChange}
       />
     ));
-  }, [fields, values, handleFieldChange]);
+  }, [values, handleFieldChange]);
 
   if (!isOpened) {
     return React.cloneElement(children, {
