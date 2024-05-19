@@ -68,7 +68,7 @@ const CardAdd = React.memo(({ isOpened, onCreate, onClose }) => {
 
             // Definição dos campos e suas posições
             const fields = [
-              { name: 'Corr/Forn.:', length: '[Corr/Forn.:'.length },
+              { name: 'Corr/Forn.', length: '[Corr/Forn.'.length },
               { name: 'Qtd.', length: '[Qtd.'.length },
               { name: 'Local/Carreg.', length: '[Local/Carreg.'.length },
               { name: 'NF.', length: '[NF.'.length },
