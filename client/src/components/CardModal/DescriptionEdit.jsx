@@ -1,42 +1,43 @@
 import React, { useCallback, useImperativeHandle, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { Button, Form, Input } from 'semantic-ui-react';
+import { Button, Form } from 'semantic-ui-react';
+import SimpleMDE from 'react-simplemde-editor';
 
 import styles from './DescriptionEdit.module.scss';
 
 const DEFAULT_FIELDS = {
-  VLR_TOTAL_DO_FRETE: 'VLR TOTAL DO FRETE',
-  VLR_DO_FRETE_TON: 'VLR DO FRETE TON.',
-  TOTAL_COMPRADO: 'TOTAL COMPRADO',
-  TOTAL_RECEBIDO: 'TOTAL RECEBIDO',
-  PESO_DE_ORIGEM: 'PESO DE ORIGEM',
-  PESO_DE_CHEGADA: 'PESO DE CHEGADA',
+  VLR_TOTAL_DO_FRETE: '{VLR TOTAL DO FRETE: }   ',
+  VLR_DO_FRETE_TON: '{VLR DO FRETE TON.: }   ',
+  TOTAL_COMPRADO: '{TOTAL COMPRADO: }   ',
+  TOTAL_RECEBIDO: '{TOTAL RECEBIDO: }   ',
+  PESO_DE_ORIGEM: '{PESO DE ORIGEM: }   ',
+  PESO_DE_CHEGADA: '{PESO DE CHEGADA: }   ',
 };
 
 const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, ref) => {
   const [t] = useTranslation();
   const [isOpened, setIsOpened] = useState(false);
-  const [values, setValues] = useState({});
-  const [description, setDescription] = useState('');
+  const [value, setValue] = useState(null);
+  const [fieldsAdded, setFieldsAdded] = useState(false);
 
   const open = useCallback(() => {
     setIsOpened(true);
-    setValues(DEFAULT_FIELDS);
-    setDescription(defaultValue || '');
-  }, [defaultValue, setValues, setDescription]);
+    const initialValue = defaultValue || '';
+    setValue(initialValue);
+  }, [defaultValue, setValue]);
 
   const close = useCallback(() => {
-    const cleanValue = description.trim() || null;
+    const cleanValue = value.trim() || null;
 
     if (cleanValue !== defaultValue) {
       onUpdate(cleanValue);
     }
 
     setIsOpened(false);
-    setValues({});
-    setDescription('');
-  }, [defaultValue, onUpdate, description]);
+    setValue(null);
+    setFieldsAdded(false); // Resetar o estado dos campos adicionados
+  }, [defaultValue, onUpdate, value, setValue, setFieldsAdded]);
 
   useImperativeHandle(
     ref,
@@ -53,27 +54,54 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     }
   }, [open]);
 
-  const handleFieldChange = useCallback(
-    (e, { name, value }) => {
-      setValues((prevValues) => ({
-        ...prevValues,
-        [name]: value,
-      }));
+  const handleFieldKeyDown = useCallback(
+    (event) => {
+      if (event.ctrlKey && event.key === 'Enter') {
+        close();
+      }
     },
-    [setValues]
+    [close],
   );
 
   const handleSubmit = useCallback(() => {
-    const preaddedFields = Object.values(values).map(field => `{${field}:}`).join(' ');
-    setDescription(`${preaddedFields}\n${description}`);
     close();
-  }, [values, description, setDescription, close]);
+  }, [close]);
 
-  const renderInputFields = useMemo(() => {
-    return Object.entries(values).map(([key, value]) => (
-      <Form.Field key={key} control={Input} name={key} label={value} value={values[key]} onChange={handleFieldChange} />
-    ));
-  }, [values, handleFieldChange]);
+  const mdEditorOptions = useMemo(
+    () => ({
+      autofocus: true,
+      spellChecker: false,
+      status: false,
+      toolbar: [
+        'bold',
+        'italic',
+        'heading',
+        'strikethrough',
+        '|',
+        'quote',
+        'unordered-list',
+        'ordered-list',
+        'table',
+        '|',
+        'link',
+        'image',
+        '|',
+        'undo',
+        'redo',
+        '|',
+        'guide',
+      ],
+    }),
+    [],
+  );
+
+  const addDefaultFields = useCallback(() => {
+    if (!fieldsAdded) {
+      const preaddedFields = Object.values(DEFAULT_FIELDS).join('');
+      setValue(`${preaddedFields}\n${value}`);
+      setFieldsAdded(true);
+    }
+  }, [value, setValue, fieldsAdded, setFieldsAdded]);
 
   if (!isOpened) {
     return React.cloneElement(children, {
@@ -83,8 +111,18 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
 
   return (
     <Form onSubmit={handleSubmit}>
-      {renderInputFields}
-      <Form.Field control={Button} positive content={t('action.save')} />
+      <SimpleMDE
+        value={value}
+        options={mdEditorOptions}
+        placeholder={t('common.enterDescription')}
+        className={styles.field}
+        onKeyDown={handleFieldKeyDown}
+        onChange={setValue}
+        onFocus={addDefaultFields}
+      />
+      <div className={styles.controls}>
+        <Button positive content={t('action.save')} />
+      </div>
     </Form>
   );
 });
