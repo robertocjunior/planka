@@ -1,40 +1,64 @@
-import React, { useCallback, useImperativeHandle, useMemo, useState } from 'react';
+import React, { useCallback, useImperativeHandle, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { Button, Form } from 'semantic-ui-react';
-import SimpleMDE from 'react-simplemde-editor';
+import { Button, Form, Input } from 'semantic-ui-react';
 
 import styles from './DescriptionEdit.module.scss';
+
+const DEFAULT_FIELDS = {
+  VLR_TOTAL_DO_FRETE: 'VLR TOTAL DO FRETE',
+  VLR_DO_FRETE_TON: 'VLR DO FRETE TON.',
+  TOTAL_COMPRADO: 'TOTAL COMPRADO',
+  TOTAL_RECEBIDO: 'TOTAL RECEBIDO',
+  PESO_DE_ORIGEM: 'PESO DE ORIGEM',
+  PESO_DE_CHEGADA: 'PESO DE CHEGADA',
+};
 
 const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, ref) => {
   const [t] = useTranslation();
   const [isOpened, setIsOpened] = useState(false);
-  const [value, setValue] = useState(null);
+  const [fields, setFields] = useState(() => {
+    const initialFields = {};
+    Object.keys(DEFAULT_FIELDS).forEach(key => {
+      initialFields[key] = '';
+    });
+    return initialFields;
+  });
 
   const open = useCallback(() => {
     setIsOpened(true);
-    setValue(defaultValue || '');
-  }, [defaultValue, setValue]);
+    const newFields = { ...fields };
+    if (defaultValue) {
+      const values = defaultValue.split('\n');
+      Object.keys(DEFAULT_FIELDS).forEach((key, index) => {
+        newFields[key] = values[index] || '';
+      });
+    }
+    setFields(newFields);
+  }, [defaultValue, fields]);
 
   const close = useCallback(() => {
-    const cleanValue = value.trim() || null;
+    const cleanValues = Object.values(fields).map(value => value.trim());
+    const cleanValue = cleanValues.join('\n') || null;
 
     if (cleanValue !== defaultValue) {
       onUpdate(cleanValue);
     }
 
     setIsOpened(false);
-    setValue(null);
-  }, [defaultValue, onUpdate, value, setValue]);
+    setFields(prevFields => {
+      const resetFields = { ...prevFields };
+      Object.keys(DEFAULT_FIELDS).forEach(key => {
+        resetFields[key] = '';
+      });
+      return resetFields;
+    });
+  }, [defaultValue, onUpdate, fields]);
 
-  useImperativeHandle(
-    ref,
-    () => ({
-      open,
-      close,
-    }),
-    [open, close],
-  );
+  useImperativeHandle(ref, () => ({
+    open,
+    close,
+  }), [open, close]);
 
   const handleChildrenClick = useCallback(() => {
     if (!getSelection().toString()) {
@@ -42,46 +66,30 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     }
   }, [open]);
 
-  const handleFieldKeyDown = useCallback(
-    (event) => {
-      if (event.ctrlKey && event.key === 'Enter') {
-        close();
-      }
-    },
-    [close],
-  );
+  const handleFieldChange = useCallback((e, { name, value }) => {
+    setFields(prevFields => ({
+      ...prevFields,
+      [name]: value,
+    }));
+  }, []);
 
   const handleSubmit = useCallback(() => {
     close();
   }, [close]);
 
-  const mdEditorOptions = useMemo(
-    () => ({
-      autofocus: true,
-      spellChecker: false,
-      status: false,
-      toolbar: [
-        'bold',
-        'italic',
-        'heading',
-        'strikethrough',
-        '|',
-        'quote',
-        'unordered-list',
-        'ordered-list',
-        'table',
-        '|',
-        'link',
-        'image',
-        '|',
-        'undo',
-        'redo',
-        '|',
-        'guide',
-      ],
-    }),
-    [],
-  );
+  const renderInputFields = useMemo(() => {
+    return Object.entries(DEFAULT_FIELDS).map(([key, label]) => (
+      <Form.Field
+        key={key}
+        control={Input}
+        name={key}
+        label={label}
+        value={fields[key]}
+        onChange={handleFieldChange}
+        className={styles.field}
+      />
+    ));
+  }, [fields, handleFieldChange]);
 
   if (!isOpened) {
     return React.cloneElement(children, {
@@ -91,17 +99,8 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
 
   return (
     <Form onSubmit={handleSubmit}>
-      <SimpleMDE
-        value={value}
-        options={mdEditorOptions}
-        placeholder={t('common.enterDescription')}
-        className={styles.field}
-        onKeyDown={handleFieldKeyDown}
-        onChange={setValue}
-      />
-      <div className={styles.controls}>
-        <Button positive content={t('action.save')} />
-      </div>
+      {renderInputFields}
+      <Form.Field control={Button} positive content={t('action.save')} />
     </Form>
   );
 });
