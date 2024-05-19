@@ -82,6 +82,7 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
         label={t(`fields.${key}`)}
         value={fields[key]}
         onChange={handleFieldChange}
+        autoComplete="off" // Adicionado para desativar o autocomplete
       />
     ));
   }, [fields, handleFieldChange, t]);
