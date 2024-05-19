@@ -11,6 +11,7 @@ const DEFAULT_FIELDS = {
   TOTAL_RECEBIDO: 'TOTAL RECEBIDO',
   PESO_DE_ORIGEM: 'PESO DE ORIGEM',
   PESO_DE_CHEGADA: 'PESO DE CHEGADA',
+  DESCRICAO: 'DESCRIÇÃO',  // Novo campo adicionado
 };
 
 const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, ref) => {

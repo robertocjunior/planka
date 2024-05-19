@@ -71,7 +71,7 @@ export default {
       deleteProject_title: 'Delete Project',
       deleteTask_title: 'Delete Task',
       deleteUser_title: 'Delete User',
-      description: 'Description',
+      description: 'Additional Fields',
       detectAutomatically: 'Detect automatically',
       dropFileToUpload: 'Drop file to upload',
       editor: 'Editor',

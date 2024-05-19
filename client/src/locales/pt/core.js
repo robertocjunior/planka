@@ -73,7 +73,7 @@ export default {
       deleteProject_title: 'Excluir Projeto',
       deleteTask_title: 'Excluir Tarefa',
       deleteUser_title: 'Excluir Usuário',
-      description: 'Descrição',
+      description: 'Campos Adicionais',
       detectAutomatically: 'Detectar automaticamente',
       dropFileToUpload: 'Solte o arquivo para enviar',
       editor: 'Editor',
