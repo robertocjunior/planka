@@ -108,13 +108,6 @@ const CardModal = React.memo(
       [onUpdate],
     );
 
-    const handlePersonalizedUpdate = (updatedValue) => {
-      // Atualize o estado ou envie a atualização para o servidor
-      console.log('Updated value:', updatedValue);
-      // Por exemplo, atualize o estado no componente pai
-      // setPersonalized(updatedValue);
-    };
-
     const handleDueDateUpdate = useCallback(
       (newDueDate) => {
         onUpdate({
