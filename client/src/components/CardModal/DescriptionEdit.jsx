@@ -19,7 +19,6 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
   const [t] = useTranslation();
   const [isOpened, setIsOpened] = useState(false);
   const [value, setValue] = useState(null);
-  const [fieldsAdded, setFieldsAdded] = useState(false);
 
   const open = useCallback(() => {
     setIsOpened(true);
@@ -36,8 +35,7 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
 
     setIsOpened(false);
     setValue(null);
-    setFieldsAdded(false); // Resetar o estado dos campos adicionados
-  }, [defaultValue, onUpdate, value, setValue, setFieldsAdded]);
+  }, [defaultValue, onUpdate, value, setValue]);
 
   useImperativeHandle(
     ref,
@@ -96,12 +94,11 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
   );
 
   const addDefaultFields = useCallback(() => {
-    if (!fieldsAdded) {
-      const preaddedFields = Object.values(DEFAULT_FIELDS).join('');
+    const preaddedFields = Object.values(DEFAULT_FIELDS).join('');
+    if (!value.includes(preaddedFields)) {
       setValue(`${preaddedFields}\n${value}`);
-      setFieldsAdded(true);
     }
-  }, [value, setValue, fieldsAdded, setFieldsAdded]);
+  }, [value, setValue]);
 
   if (!isOpened) {
     return React.cloneElement(children, {
@@ -118,7 +115,7 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
         className={styles.field}
         onKeyDown={handleFieldKeyDown}
         onChange={setValue}
-        onFocus={addDefaultFields}
+        onFocus={addDefaultFields} // Adiciona os campos predefinidos quando o editor recebe o foco
       />
       <div className={styles.controls}>
         <Button positive content={t('action.save')} />
