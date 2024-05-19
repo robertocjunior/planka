@@ -91,10 +91,20 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     ));
   }, [fields, handleFieldChange]);
 
+  const renderFormattedFields = useMemo(() => {
+    return Object.entries(DEFAULT_FIELDS).map(([key, label]) => (
+      <div key={key} className={styles.formattedField}>
+        {label}: {fields[key]}
+      </div>
+    ));
+  }, [fields]);
+
   if (!isOpened) {
-    return React.cloneElement(children, {
-      onClick: handleChildrenClick,
-    });
+    return (
+      <div onClick={handleChildrenClick} className={styles.display}>
+        {renderFormattedFields}
+      </div>
+    );
   }
 
   return (
