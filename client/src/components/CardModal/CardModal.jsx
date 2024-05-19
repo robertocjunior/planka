@@ -373,40 +373,6 @@ const CardModal = React.memo(
                 </div>
               </div>
             )}
-            {(personalized || canEdit) && (
-              <div className={styles.contentModule}>
-                <div className={styles.moduleWrapper}>
-                  <Icon name="star" className={styles.moduleIcon} />
-                  <div className={styles.moduleHeader}>{t('common.personalized')}</div>
-                  {canEdit ? (
-                    <PersonalizedEdit defaultValue={personalized} onUpdate={handlePersonalizedUpdate}>
-                      {personalized ? (
-                        <button
-                          type="button"
-                          className={classNames(styles.personalizedText, styles.cursorPointer)}
-                        >
-                          <Markdown linkStopPropagation linkTarget="_blank">
-                            {personalized}
-                          </Markdown>
-                        </button>
-                      ) : (
-                        <button type="button" className={styles.personalizedButton}>
-                          <span className={styles.personalizedButtonText}>
-                            {t('action.addMoreDetailedPersonalization')}
-                          </span>
-                        </button>
-                      )}
-                    </PersonalizedEdit>
-                  ) : (
-                    <div className={styles.personalizedText}>
-                      <Markdown linkStopPropagation linkTarget="_blank">
-                        {personalized}
-                      </Markdown>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
             {(tasks.length > 0 || canEdit) && (
               <div className={styles.contentModule}>
                 <div className={styles.moduleWrapper}>
