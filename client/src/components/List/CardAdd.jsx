@@ -112,8 +112,10 @@ const CardAdd = React.memo(({ isOpened, onCreate, onClose }) => {
         const position = '[Prod.:'.length;
         current.ref.current.setSelectionRange(position, position);
       }
+    } else {
+      setData(DEFAULT_DATA);
     }
-  }, [isOpened]);
+  }, [isOpened, setData, DEFAULT_DATA]);
 
   useDidUpdate(() => {
     const { current } = nameField;
