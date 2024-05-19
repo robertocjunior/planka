@@ -14,10 +14,11 @@ const DEFAULT_DATA = {
 
 const CardAdd = React.memo(({ isOpened, onCreate, onClose }) => {
   const [t] = useTranslation();
-  const [data, handleFieldChange, setData] = useForm(DEFAULT_DATA);
+  const [data, setData] = useForm(DEFAULT_DATA);
   const [focusNameFieldState, focusNameField] = useToggle();
 
   const nameField = useRef(null);
+  const prevDataRef = useRef(data.name);
 
   const submit = useCallback(
     (autoOpen) => {
@@ -41,6 +42,28 @@ const CardAdd = React.memo(({ isOpened, onCreate, onClose }) => {
       }
     },
     [onCreate, onClose, data, setData, focusNameField],
+  );
+
+  const handleFieldChange = useCallback(
+    (event) => {
+      const { selectionStart, selectionEnd } = event.target;
+      const { value } = event.target;
+
+      // Verifica se houve tentativa de apagar algum conteúdo entre ':' e ']'
+      const prev = prevDataRef.current;
+      if (
+        value.substring(0, selectionStart) !== prev.substring(0, selectionStart) ||
+        value.substring(selectionEnd) !== prev.substring(selectionEnd)
+      ) {
+        // Se houver, reverte a mudança
+        setData({ name: prev });
+        return;
+      }
+
+      setData({ name: value });
+      prevDataRef.current = value;
+    },
+    [setData],
   );
 
   const handleFieldKeyDown = useCallback(
