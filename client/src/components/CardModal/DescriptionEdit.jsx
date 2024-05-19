@@ -22,8 +22,8 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
 
   const open = useCallback(() => {
     setIsOpened(true);
-    setValues({ ...values, ...defaultValue });
-  }, [defaultValue, values]);
+    setValues({});
+  }, []);
 
   const close = useCallback(() => {
     const cleanValue = Object.values(values).join(' ').trim() || null;
@@ -34,6 +34,7 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
 
     setIsOpened(false);
     setFields(DEFAULT_FIELDS);
+    setValues({});
   }, [defaultValue, onUpdate, values]);
 
   useImperativeHandle(
@@ -89,12 +90,12 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
 
 DescriptionEdit.propTypes = {
   children: PropTypes.element.isRequired,
-  defaultValue: PropTypes.object,
+  defaultValue: PropTypes.string,
   onUpdate: PropTypes.func.isRequired,
 };
 
 DescriptionEdit.defaultProps = {
-  defaultValue: {},
+  defaultValue: undefined,
 };
 
 export default React.memo(DescriptionEdit);
