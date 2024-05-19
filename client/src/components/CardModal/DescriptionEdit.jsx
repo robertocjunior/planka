@@ -94,6 +94,13 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     [],
   );
 
+  const cursorPos = useMemo(() => {
+    // Encontrar a posição inicial do cursor
+    const cursorStart = value.indexOf(':') + 2; // +2 para pular ': ' antes de '{'
+    const cursorEnd = value.indexOf('}') - 1; // -1 para ajustar a posição final antes de '}'
+    return { line: 0, ch: cursorStart > -1 ? cursorStart : value.length }; // Usar o cursorEnd pode causar um erro se não for encontrado
+  }, [value]);
+
   if (!isOpened) {
     return React.cloneElement(children, {
       onClick: handleChildrenClick,
@@ -104,7 +111,11 @@ const DescriptionEdit = React.forwardRef(({ children, defaultValue, onUpdate }, 
     <Form onSubmit={handleSubmit}>
       <SimpleMDE
         value={value}
-        options={mdEditorOptions}
+        options={{
+          ...mdEditorOptions,
+          autofocus: { line: 0, ch: 0 }, // Define o foco na primeira linha e primeira coluna
+          cursorPosition: cursorPos, // Define a posição inicial do cursor
+        }}
         placeholder={t('common.enterDescription')}
         className={styles.field}
         onKeyDown={handleFieldKeyDown}
