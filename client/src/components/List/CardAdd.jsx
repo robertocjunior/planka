@@ -88,10 +88,8 @@ const CardAdd = React.memo(({ isOpened, onCreate, onClose }) => {
               }
             }
 
-            if (nextFieldPosition !== -1) {
-              current.ref.current.setSelectionRange(nextFieldPosition, nextFieldPosition);
-            } else if (nextIndex !== -1) {
-              // Se não houver próxima posição, volte para o início
+            // Se não houver próxima posição, volte para o início
+            if (nextFieldPosition === -1 && nextIndex === -1) {
               current.ref.current.setSelectionRange(0, 0);
             }
           }
