@@ -11,6 +11,8 @@ const DEFAULT_FIELDS = [
   'TOTAL_RECEBIDO',
   'PESO_DE_ORIGEM',
   'PESO_DE_CHEGADA',
+  'MOTORISTA',
+  'PLACA',
   'DESCRICAO', // Novo campo adicionado
 ];
 
