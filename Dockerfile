@@ -8,8 +8,8 @@ WORKDIR /app
 
 COPY server/package.json server/package-lock.json ./
 
-RUN npm install npm@latest --global \
-  && npm install pnpm --global \
+RUN npm install -g npm@10 \
+  && npm install -g pnpm \
   && pnpm import \
   && pnpm install --prod
 
@@ -19,11 +19,11 @@ WORKDIR /app
 
 COPY client/package.json client/package-lock.json ./
 
-RUN npm install npm@latest --global \
-  && npm install pnpm --global \
+RUN npm install -g npm@10 \
+  && npm install -g pnpm \
   && pnpm import \
   && pnpm install --prod
-
+  
 COPY client .
 RUN DISABLE_ESLINT_PLUGIN=true npm run build
 
